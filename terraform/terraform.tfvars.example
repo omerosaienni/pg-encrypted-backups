@@ -1,0 +1,2 @@
+project     = "your-gcp-project-id"
+bucket_name = "your-globally-unique-bucket-name"

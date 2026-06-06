@@ -1,0 +1,18 @@
+name: demo
+
+# The whole point of this repo is that it actually runs - so CI runs it.
+# Builds the image and walks the full local migration story (backup -> migrate
+# -> encrypted backup -> restore from both stanzas -> point in time).
+on:
+  push:
+  pull_request:
+
+jobs:
+  local-demo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the image
+        run: make build
+      - name: Run the local migration demo
+        run: make demo

@@ -1,0 +1,22 @@
+# PostgreSQL config for the pgBackRest sandbox.
+#
+# Replaces the stock postgresql.conf.sample at initdb, so it carries only the
+# settings this sandbox needs. Everything else uses PostgreSQL 14 defaults
+# (wal_level=replica and max_wal_senders=10 already suit pgBackRest).
+
+# Listen on all interfaces so the host can reach the mapped port.
+listen_addresses = '*'
+
+# - Archiving -
+# archive_mode is on; the archive_command (which stanza to feed) is supplied by
+# a drop-in in conf.d, mounted by scripts/run-database.sh, because the target
+# stanza differs between the local demo (demo) and the GCS demo (demo-gcp). It
+# lives in a file (not a -c flag) so the demo's ALTER SYSTEM migration can
+# override it later.
+archive_mode = on
+include_dir = '/etc/postgresql/conf.d'
+
+# - Recovery -
+# restore_command is intentionally NOT set here: pgBackRest writes the correct
+# one (for the stanza being restored) into postgresql.auto.conf on every restore.
+# Hardcoding it would point every recovery at the demo stanza specifically.

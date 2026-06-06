@@ -1,0 +1,6 @@
+# Never send secrets, generated GCS config, or local state to the build daemon.
+**/secrets
+config/gcp
+**/service-account-key.json
+**/*.tfstate*
+**/*.tfvars

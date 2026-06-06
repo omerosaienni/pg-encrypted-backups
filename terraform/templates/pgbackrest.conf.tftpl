@@ -1,0 +1,31 @@
+# Terraform renders this into docker/config/gcp/pgbackrest.conf with the bucket
+# name filled in (see main.tf); the GCS stanzas only ever exist post-apply.
+[global]
+repo1-retention-full=6
+repo1-retention-full-type=count
+# GCS is latency-bound: a cluster is ~1,250 tiny files and each one is its own
+# HTTPS upload. Bundle packs them into a few large objects (far fewer round
+# trips) and process-max uploads in parallel - together they cut a GCS backup
+# from minutes to seconds. Not needed for the local (posix) repo.
+repo1-bundle=y
+process-max=4
+
+[demo-gcp]
+pg1-path=/var/lib/postgresql/data
+pg1-user=postgres
+repo1-path=/demo-workspace
+repo1-type=gcs
+repo1-gcs-key-type=service
+repo1-gcs-bucket=${bucket_name}
+repo1-gcs-key=/home/myuser/.config/service-account-key.json
+
+[demo-gcp-encrypted]
+pg1-path=/var/lib/postgresql/data
+pg1-user=postgres
+repo1-path=/demo-workspace
+repo1-type=gcs
+repo1-gcs-key-type=service
+repo1-gcs-bucket=${bucket_name}
+repo1-gcs-key=/home/myuser/.config/service-account-key.json
+repo1-cipher-pass=some-cipher-pass
+repo1-cipher-type=aes-256-cbc
